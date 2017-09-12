@@ -24,12 +24,45 @@ namespace TestCSharpToSQL {
 			var sql = "select * from Student";
 			SqlCommand cmd = new SqlCommand(sql, connection);
 			SqlDataReader reader = cmd.ExecuteReader();
+			List<Student> students = new List<Student>();
 			while(reader.Read()) {
-				var id = reader.GetInt32(0);
-				var firstName = reader.GetString(1);
-				var lastName = reader.GetString(2);
-				var birthday = reader.GetDateTime(9);
+				var id = reader.GetInt32(reader.GetOrdinal("Id"));
+				var firstName = reader.GetString(reader.GetOrdinal("FirstName"));
+				var lastName = reader.GetString(reader.GetOrdinal("LastName"));
+				var birthday = reader.GetDateTime(reader.GetOrdinal("Birthday"));
+				var address = reader.GetString(reader.GetOrdinal("Address"));
+				var city = reader.GetString(reader.GetOrdinal("City"));
+				var state = reader.GetString(reader.GetOrdinal("State"));
+				var zipcode = reader.GetString(reader.GetOrdinal("Zipcode"));
+				var phoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber"));
+				var email = reader.GetString(reader.GetOrdinal("Email"));
+				var sat = reader.GetInt32(reader.GetOrdinal("SAT"));
+				var gpa = reader.GetDouble(reader.GetOrdinal("GPA"));
+				//set major id to null value before reading the database value
+				var majorID = 0;
+				//check the value in the database for null
+				//if it is NOT NULL
+				if (!reader.GetValue(reader.GetOrdinal("MajorId")).Equals(DBNull.Value)) {
+					//then do this
+					majorID = reader.GetInt32(reader.GetOrdinal("MajorId"));
+				}
 				Console.WriteLine($"{id}, {firstName} {lastName}, born on {birthday}");
+				Student student = new Student();
+				student.Id = id;
+				student.FirstName = firstName;
+				student.LastName = lastName;
+				student.Birthday = birthday;
+				student.Address = address;
+				student.City = city;
+				student.State = state;
+				student.Zipcode = zipcode;
+				student.PhoneNumber = phoneNumber;
+				student.Email = email;
+				student.SAT = sat;
+				student.GPA = gpa;
+				student.MajorId = majorID;
+				students.Add(student);
+
 				}
 
 
