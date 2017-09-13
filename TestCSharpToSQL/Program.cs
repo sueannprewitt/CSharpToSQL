@@ -8,6 +8,9 @@ using CSharpToSQL;
 
 namespace TestCSharpToSQL {
 	class Program {
+		private object idmajor;
+		private object majordescription;
+		private string description;
 
 		void Run() {
 
@@ -66,13 +69,29 @@ namespace TestCSharpToSQL {
 				}
 
 
-			reader.Close(); //close reader before connection
-			connection.Close(); //this is a method
+				reader.Close(); //close reader before connection
+
+			var sqlMajor = "select * from Major";
+			SqlCommand cmdMajor = new SqlCommand(sqlMajor, connection);
+			SqlDataReader readerMajor = cmdMajor.ExecuteReader();
+			List<Major> majors = new List<Major>();
+			while (readerMajor.Read()) {
+				var idmajor = readerMajor.GetInt32(readerMajor.GetOrdinal("Id"));
+				var majordescription = readerMajor.GetString(readerMajor.GetOrdinal("Description"));
+			}
+			Console.WriteLine($"{idmajor}, {majordescription}");
+
+			Major major = new Major();
+			major.Id = (int) idmajor;
+			major.Description = description;
+			majors.Add(major);
+
+				readerMajor.Close();
+				connection.Close();
 
 
-
-		}
-		static void Main(string[] args) {
+			}
+			static void Main(string[] args) {
 			new Program().Run();
 		}
 	}
